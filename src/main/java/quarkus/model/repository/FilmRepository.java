@@ -2,8 +2,10 @@ package quarkus.model.repository;
 
 
 import com.speedment.jpastreamer.application.JPAStreamer;
+import com.speedment.jpastreamer.streamconfiguration.StreamConfiguration;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
+import jakarta.transaction.Transactional;
 import quarkus.model.Film;
 import quarkus.model.Film$;
 
@@ -22,12 +24,32 @@ public class FilmRepository {
         return jpaStreamer.stream(Film.class).filter(Film$.filmId.equal(filmId)).findFirst();
     }
 
+    public Stream<Film> getFilms(short minLength){
+        return jpaStreamer.stream(Film.class)
+                .filter(Film$.length.greaterThan(minLength))
+                .sorted(Film$.length);
+    }
+
     public Stream<Film> paged(long page, short minLength){
         return jpaStreamer.stream(Film.class)
                 .filter(Film$.length.greaterThan(minLength))
                 .sorted(Film$.length)
                 .skip(page * PAGE_SIZE)
                 .limit(PAGE_SIZE);
+    }
+
+    public Stream<Film> actors(String startWith, short minLength){
+        StreamConfiguration<Film> sc = StreamConfiguration.of(Film.class).joining(Film$.actors);
+        return jpaStreamer.stream(sc)
+                .filter(Film$.title.startsWith(startWith).and(Film$.length.greaterThan(minLength)))
+                .sorted(Film$.length.reversed());
+    }
+
+    @Transactional
+    public void updateRentalRate(short minLength, Float rentalRate){
+        jpaStreamer.stream(Film.class)
+                .filter(Film$.length.greaterThan(minLength))
+                .forEach(f -> f.setRentalRate(rentalRate));
     }
 
 }
