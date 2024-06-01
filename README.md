@@ -11,7 +11,12 @@ You can run your application in dev mode that enables live coding using:
 ./mvnw compile quarkus:dev
 ```
 
-> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at http://localhost:8080/q/dev/.
+Also you can run your application in debug mode using:
+```shell script
+./mvnw compile quarkus:dev -Ddebug
+```
+
+> **_NOTE:_**  Quarkus now ships with a Dev UI, which is available in dev mode only at http://localhost:8081/q/dev/.
 
 ## Packaging and running the application
 
