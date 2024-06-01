@@ -70,3 +70,15 @@ Create your first JPA entity
 Easily start your Reactive RESTful Web Services
 
 [Related guide section...](https://quarkus.io/guides/getting-started-reactive#reactive-jax-rs-resources)
+
+
+## Install MySql/Sakila db on docker 
+
+Download Image
+````shell script
+docker pull restsql/mysql-sakila
+````
+Run docker container
+````shell script
+docker run -d --publish 3306:3306 --name mysqld restsql/mysql-sakila
+````
